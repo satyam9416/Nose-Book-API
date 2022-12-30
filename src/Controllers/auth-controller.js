@@ -85,5 +85,5 @@ export const authenticate = async (req, res) => {
 
 // U S E R  L O G O U T
 export const logOut = async (req, res) => {
-    return res.clearCookie("token", {path = '/',sameSite: "none", secure: true,).status(200).send('User logged out successfully')
+    return res.clearCookie("token", {path = '/',sameSite: "none", secure: true).status(200).send('User logged out successfully')
 }
