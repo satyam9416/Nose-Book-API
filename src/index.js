@@ -31,7 +31,7 @@ app.use(cors({
     credentials: true,
     origin: function (origin, callback) {
         // const whitelist = ['http://192.168.0.103:3000', 'http://localhost:3000', 'https://nosebook.netlify.app']
-        const whitelist = ['https://nosebook.netlify.app']
+        const whitelist = ['https://nosebook.netlify.app', 'http://localhost:3000']
         if (whitelist.indexOf(origin) !== -1) {
             callback(null, true)
         } else {
@@ -77,16 +77,6 @@ io.on('connection', (socket) => {
         console.log('A user disconnected : ', users.length)
     })
 })
-
-// // Heroku Production Setup
-// const __dirname1 = path.resolve()
-// if (process.env.NODE_ENV == "production") {
-//     app.use(express.static("/client/build"));
-//     const path = require("path");
-//     app.get("*", (req, res) => {
-//         res.sendFile(path.resolve(__dirname1, 'client', 'build', 'index.html'));
-//     })
-// }
 
 // E S T A B L I S H I N G  C O N N E C T I O N
 mongoose.connect(process.env.MONGO_CONNECT,
