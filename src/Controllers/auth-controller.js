@@ -16,7 +16,7 @@ export const newRegister = async (req, res) => {
         try {
             const user = await newUser.save()
             const token = jwt.sign({
-                id : user._id
+                id: user._id
             }, process.env.JWT_SECRET)
 
             res.status(200).json(newUser)
@@ -26,8 +26,8 @@ export const newRegister = async (req, res) => {
             res.status(500).json({ message: error.message })
         }
     }
-    else if(oldUser?.length){
-        res.status(400).json({oldUser :  oldUser})
+    else if (oldUser?.length) {
+        res.status(400).json({ oldUser: oldUser })
     }
     else {
         res.status(500).json({ message: 'Something went wrong' })
@@ -44,12 +44,12 @@ export const loginUser = (req, res) => {
                 const token = jwt.sign({
                     id: user._id
                 }, process.env.JWT_SECRET)
-                res.status(200).cookie('token', token, { httpOnly: true }).send(user)
+                res.status(200).cookie('token', token).send(user)
             }
-            else{
+            else {
                 res.status(404).send('Wrong password')
             }
-                
+
         }
         else {
             res.status(404).send("User doesn't exist")
@@ -62,10 +62,10 @@ export const loginUser = (req, res) => {
 export const authenticate = async (req, res) => {
     const { token } = req.cookies;
     let data = false
-    if(token){
+    if (token) {
         data = jwt.verify(token, process.env.JWT_SECRET)
     }
-    if(data){
+    if (data) {
         try {
             const user = await userModal.findById(data.id)
             res.status(200).send(user)
@@ -73,7 +73,7 @@ export const authenticate = async (req, res) => {
             res.status(500).send(error)
         }
     }
-    else{
+    else {
         res.status(401).send(data)
     }
 }
