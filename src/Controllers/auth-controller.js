@@ -47,7 +47,7 @@ export const loginUser = (req, res) => {
                 res.status(200).cookie('token', token, {
                     sameSite: "none",
                     secure: true,
-                    domain: "myapp.vercel.app",
+                    domain: "nosebook.netlify.app",
                     httpOnly: true
                 }).send(user)
             }
