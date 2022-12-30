@@ -44,7 +44,12 @@ export const loginUser = (req, res) => {
                 const token = jwt.sign({
                     id: user._id
                 }, process.env.JWT_SECRET)
-                res.status(200).cookie('token', token).send(user)
+                res.status(200).cookie('token', token, {
+                    sameSite: "none",
+                    secure: true,
+                    domain: "myapp.vercel.app",
+                    httpOnly: true
+                }).send(user)
             }
             else {
                 res.status(404).send('Wrong password')
