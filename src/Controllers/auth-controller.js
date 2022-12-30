@@ -47,7 +47,6 @@ export const loginUser = (req, res) => {
                 res.status(200).cookie('token', token, {
                     sameSite: "none",
                     secure: true,
-                    domain: "nosebook.netlify.app",
                     httpOnly: true
                 }).send(user)
             }
