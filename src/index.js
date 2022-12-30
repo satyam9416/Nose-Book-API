@@ -31,7 +31,7 @@ app.use(cors({
     credentials: true,
     origin: function (origin, callback) {
         // const whitelist = ['http://192.168.0.103:3000', 'http://localhost:3000', 'https://nosebook.netlify.app']
-        const whitelist = ['https://nosebook.netlify.app', 'http://localhost:3000']
+        const whitelist = ['https://nosebook.netlify.app']
         if (whitelist.indexOf(origin) !== -1) {
             callback(null, true)
         } else {
