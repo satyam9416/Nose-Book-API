@@ -92,3 +92,8 @@ export const getTimelinePosts = async (req, res) => {
     }
 }
 
+export const commentPost = async(req, res) => {
+    const {userId, postId, comment} = req.body;
+
+}
+

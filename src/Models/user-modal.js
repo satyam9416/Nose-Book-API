@@ -5,8 +5,8 @@ const userSchema = new mongoose.Schema({
     lName: String,
     passwd: String,
     status: String,
-    profileImg: String,
-    coverImg: String,
+    profileImg: { type: String, default: '/images/defaultProfile.jpg' },
+    coverImg: {type: String, default: '/images/defaultCover.jpg'},
     phone: Number,
     DOB: Date,
     relationshipStatus: String,
@@ -17,17 +17,9 @@ const userSchema = new mongoose.Schema({
         default: false
     },
     followers: [],
-    followings: [],
-    posts: [{
-        img: String,
-        content: String,
-        likes: [],
-        comments: [{
-            userName: String,
-            comment: String
-        }]
-    }]}, 
-    {timestamps: true}
-    )
+    followings: []
+},
+    { timestamps: true }
+)
 const userModal = mongoose.model('user', userSchema)
 export default userModal

@@ -6,7 +6,6 @@ import mongoose from 'mongoose'
 import 'dotenv/config'
 import cookieParser from 'cookie-parser'
 import { Server } from 'socket.io'
-import path from 'path'
 
 // D E C L A R A T I O N S
 const app = express()
@@ -18,7 +17,6 @@ const io = new Server(server)
 import authRouter from './Routes/auth-route.js'
 import userRouter from './Routes/user-route.js'
 import postRouter from './Routes/post-route.js'
-import uploadImageRouter from './Routes/upload-image-route.js'
 import chatsRouter from './Routes/chat-route.js'
 
 // M I D D L E  W A R E S
@@ -30,7 +28,6 @@ app.use(cookieParser());
 app.use(cors({
     credentials: true,
     origin: function (origin, callback) {
-        // const whitelist = ['http://192.168.0.103:3000', 'http://localhost:3000', 'https://nosebook.netlify.app']
         const whitelist = ['https://nosebook.netlify.app', 'http://localhost:3000']
         if (whitelist.indexOf(origin) !== -1) {
             callback(null, true)
@@ -44,7 +41,6 @@ app.use(cors({
 app.use('/auth', authRouter)
 app.use('/user', userRouter)
 app.use('/post', postRouter)
-// app.use('/upload', uploadImageRouter)
 app.use('/chats', chatsRouter)
 
 // SOCKET.IO
