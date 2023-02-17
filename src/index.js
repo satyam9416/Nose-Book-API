@@ -31,7 +31,7 @@ app.use(cors({
     credentials: true,
     origin: function (origin, callback) {
         // const whitelist = ['http://192.168.0.103:3000', 'http://localhost:3000', 'https://nosebook.netlify.app']
-        const whitelist = ['https://nosebook.netlify.app']
+        const whitelist = ['https://nosebook.netlify.app', 'http://localhost:3000']
         if (whitelist.indexOf(origin) !== -1) {
             callback(null, true)
         } else {
@@ -44,7 +44,7 @@ app.use(cors({
 app.use('/auth', authRouter)
 app.use('/user', userRouter)
 app.use('/post', postRouter)
-app.use('/upload', uploadImageRouter)
+// app.use('/upload', uploadImageRouter)
 app.use('/chats', chatsRouter)
 
 // SOCKET.IO
@@ -65,7 +65,6 @@ io.on('connection', (socket) => {
                 }
             })
         }
-        console.log('A user connected : ', users.length)
     })
     socket.on('msgSent', newMsg => {
         const user = users.find((user) => user.userId === newMsg.recieverId)
@@ -74,7 +73,6 @@ io.on('connection', (socket) => {
 
     socket.on('disconnect', () => {
         users = users.filter((user) => user.socketId !== socket.id)
-        console.log('A user disconnected : ', users.length)
     })
 })
 

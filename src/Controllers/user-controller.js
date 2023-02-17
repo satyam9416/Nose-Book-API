@@ -23,6 +23,7 @@ export const getUser = async (req, res) => {
 // Update user controller
 export const updateUser = async (req, res) => {
     const id = req.params.id
+    console.log(req.body)
     let { currentUserId, currentUserAdminStatus, passwd, userName } = req.body
     userName ? req.body.userName = _.capitalize(userName) : 0;
     if (currentUserId === id || currentUserAdminStatus) {
