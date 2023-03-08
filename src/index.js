@@ -6,11 +6,13 @@ import mongoose from 'mongoose'
 import 'dotenv/config'
 import cookieParser from 'cookie-parser'
 import { Server } from 'socket.io'
+import http from 'http'
 
 // D E C L A R A T I O N S
 const app = express()
+const hostname = '192.168.0.106'
 const PORT = process.env.PORT || 5000
-const server = app.listen(PORT, () => console.log(`Server started and listening on port ${PORT}`))
+const server = http.createServer(app).listen(PORT, hostname,() => console.log(`Server started and listening at http://${hostname}:${PORT}`))
 const io = new Server(server)
 
 // R O U T E S
@@ -18,6 +20,7 @@ import authRouter from './Routes/auth-route.js'
 import userRouter from './Routes/user-route.js'
 import postRouter from './Routes/post-route.js'
 import chatsRouter from './Routes/chat-route.js'
+import authMiddleware from './middlewares/auth.js'
 
 // M I D D L E  W A R E S
 app.use(express.static('public'))
@@ -28,7 +31,7 @@ app.use(cookieParser());
 app.use(cors({
     credentials: true,
     origin: function (origin, callback) {
-        const whitelist = ['https://nosebook.netlify.app', 'http://localhost:3000']
+        const whitelist = ['https://nosebook.netlify.app', 'http://192.168.0.106:5174']
         if (whitelist.indexOf(origin) !== -1) {
             callback(null, true)
         } else {
@@ -39,9 +42,9 @@ app.use(cors({
 
 // R O U T E S  S E T U P 
 app.use('/auth', authRouter)
-app.use('/user', userRouter)
-app.use('/post', postRouter)
-app.use('/chats', chatsRouter)
+app.use('/user', authMiddleware ,userRouter)
+app.use('/post', authMiddleware ,postRouter)
+app.use('/chats', authMiddleware ,chatsRouter)
 
 // SOCKET.IO
 let users = [];
