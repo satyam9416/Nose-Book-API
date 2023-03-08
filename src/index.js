@@ -31,7 +31,7 @@ app.use(cookieParser());
 app.use(cors({
     credentials: true,
     origin: function (origin, callback) {
-        const whitelist = ['https://nosebook.netlify.app', 'http://192.168.0.106:5174']
+        const whitelist = ['https://nosebook.netlify.app']
         if (whitelist.indexOf(origin) !== -1) {
             callback(null, true)
         } else {
