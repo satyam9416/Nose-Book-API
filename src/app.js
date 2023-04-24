@@ -10,9 +10,9 @@ import http from 'http'
 
 // D E C L A R A T I O N S
 const app = express()
-const hostname = '192.168.0.106'
+const hostname = process.env.PORT ? null : '192.168.0.106'
 const PORT = process.env.PORT || 5000
-const server = http.createServer(app).listen(PORT, () => console.log(`Server started and listening at http://${hostname}:${PORT}`))
+const server = http.createServer(app).listen(PORT, hostname, () => console.log(`Server started and listening at http://${hostname}:${PORT}`))
 const io = new Server(server)
 
 // R O U T E S

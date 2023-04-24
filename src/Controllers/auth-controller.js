@@ -66,12 +66,12 @@ export const loginUser = (req, res) => {
                 }).json({ ...user._doc, accessToken })
             }
             else {
-                res.status(404).send('Wrong password')
+                res.status(404).json({message: 'Wrong password'})
             }
 
         }
         else {
-            res.status(404).send("User doesn't exist")
+            res.status(404).json({message: "User doesn't exist"})
         }
     })
 
@@ -92,7 +92,7 @@ export const authenticate = async (req, res) => {
             const accessToken = jwt.sign({
                 id: user._id
             }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "30m" })
-            res.status(200).send({ ...user._doc, accessToken })
+            res.status(200).json({ ...user._doc, accessToken })
         } catch (error) {
             res.status(500).send(error)
         }
@@ -117,9 +117,9 @@ export const refreshToken = async(req, res) => {
                 id: data.id
             }, process.env.ACCESS_TOKEN_SECRET, {expiresIn: "30m"})
 
-            return res.status(200).send({accessToken})
+            return res.status(200).json({accessToken})
         } catch (error) {
-            return res.status(500).send({error})
+            return res.status(500).json({error})
         }
     })
 
@@ -131,5 +131,5 @@ export const logOut = async (req, res) => {
         secure : 'true', 
         sameSite: 'none',
         path: '/'
-    }).send('User logged out successfully') : res.status(402).send(false)
+    }).josn({message: 'User logged out successfully'}) : res.status(402).send(false)
 }
