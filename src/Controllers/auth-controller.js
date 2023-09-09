@@ -4,6 +4,15 @@ import 'dotenv/config'
 import _ from 'lodash'
 import jwt from 'jsonwebtoken'
 
+const cookieOptions = process.env.HOSTNAME ? {
+    maxAge: 10 * 24 * 60 * 60 * 1000
+} : {
+    sameSite: "none",
+    secure: 'true',
+    httpOnly: true,
+    maxAge: 10 * 24 * 60 * 60 * 1000
+}
+
 // new user register controller
 export const newRegister = async (req, res) => {
     let { fName, lName, userName, passwd } = req.body;
@@ -23,12 +32,7 @@ export const newRegister = async (req, res) => {
                 id: user._id
             }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "30m" })
 
-            res.status(200).cookie('token', token, {
-                sameSite: "none",
-                secure: true,
-                httpOnly: true,
-                maxAge: 10 * 24 * 60 * 60 * 1000
-            }).json({ ...newUser, accessToken })
+            res.status(200).cookie('token', token, cookieOptions).json({ ...newUser, accessToken })
 
 
         } catch (error) {
@@ -58,20 +62,15 @@ export const loginUser = (req, res) => {
                     id: user._id
                 }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "30m" })
 
-                res.status(200).cookie('token', token, {
-                    sameSite: "none",
-                    secure: true,
-                    httpOnly: true,
-                    maxAge: 10 * 24 * 60 * 60 * 1000
-                }).json({ ...user._doc, accessToken })
+                res.status(200).cookie('token', token, cookieOptions).json({ ...user._doc, accessToken })
             }
             else {
-                res.status(404).json({message: 'Wrong password'})
+                res.status(404).json({ message: 'Wrong password' })
             }
 
         }
         else {
-            res.status(404).json({message: "User doesn't exist"})
+            res.status(404).json({ message: "User doesn't exist" })
         }
     })
 
@@ -82,16 +81,16 @@ export const authenticate = async (req, res) => {
 
     const { token } = req.cookies;
 
-    if(!token) return res.status(401).json({message: 'No Token provided'});
+    if (!token) return res.status(401).json({ message: 'No Token provided' });
 
-    jwt.verify(token, process.env.JWT_SECRET, async(err, data) => {
+    jwt.verify(token, process.env.JWT_SECRET, async (err, data) => {
 
-        if(err) return res.status(403).json({message: 'Unable to verify token'})
+        if (err) return res.status(403).json({ message: 'Unable to verify token' })
         try {
             const user = await userModal.findById(data.id)
             const accessToken = jwt.sign({
                 id: user._id
-            }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "30m" })
+            }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "10s" })
             res.status(200).json({ ...user._doc, accessToken })
         } catch (error) {
             res.status(500).send(error)
@@ -100,26 +99,26 @@ export const authenticate = async (req, res) => {
 
 }
 
-export const refreshToken = async(req, res) => {
+export const refreshToken = async (req, res) => {
 
     const { token } = req.cookies;
 
-    if(!token) return res.status(401).json({message: 'No Token provided'});
+    if (!token) return res.status(401).json({ message: 'No Token provided' });
 
-    jwt.verify(token, process.env.JWT_SECRET, async(err, data) => {
+    jwt.verify(token, process.env.JWT_SECRET, async (err, data) => {
 
-        if(err) return res.status(403).json({message: 'Unable to verify token'});
+        if (err) return res.status(403).json({ message: 'Unable to verify token' });
 
         try {
-            const user = await userModal.exists({_id: data.id})
-            if(!user) return res.status(404).json({message: 'User does not exist'})
+            const user = await userModal.exists({ _id: data.id })
+            if (!user) return res.status(404).json({ message: 'User does not exist' })
             const accessToken = jwt.sign({
                 id: data.id
-            }, process.env.ACCESS_TOKEN_SECRET, {expiresIn: "30m"})
+            }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "30m" })
 
-            return res.status(200).json({accessToken})
+            return res.status(200).json({ accessToken })
         } catch (error) {
-            return res.status(500).json({error})
+            return res.status(500).json({ error })
         }
     })
 
@@ -127,9 +126,9 @@ export const refreshToken = async(req, res) => {
 
 // U S E R  L O G O U T
 export const logOut = async (req, res) => {
-    req.cookies.token ? res.status(200).clearCookie("token", {
-        secure : 'true', 
+    req.cookies.token ? res.status(200).clearCookie("token", process.env.HOSTNAME ?? {
+        secure: 'true',
         sameSite: 'none',
         path: '/'
-    }).josn({message: 'User logged out successfully'}) : res.status(402).send(false)
+    }).json({ message: 'User logged out successfully' }) : res.status(402).send(false)
 }

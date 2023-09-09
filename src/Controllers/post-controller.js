@@ -92,8 +92,25 @@ export const getTimelinePosts = async (req, res) => {
     }
 }
 
-export const commentPost = async(req, res) => {
-    const {userId, postId, comment} = req.body;
+export const commentOnPost = async(req, res) => {
+    const { postId } = req.params
+    const { comment} = req.body;
+
+    try {
+        let post = await postModal.findById(postId)
+
+        if(!post) {
+            return res.status(404).json({message: 'post not found', isError: true, error: 'post not found'})
+        }
+
+        post.comments.push({text: comment, userId :req.auth.id})
+        await post.save()
+        
+        return res.json({post, message: 'success', isError: false})
+    } catch (error) {
+        res.status(500).json(error)        
+    }
+
 
 }
 
