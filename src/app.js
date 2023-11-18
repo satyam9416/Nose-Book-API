@@ -36,6 +36,7 @@ app.use(cors({
 console.log('client url : ', process.env.CLIENT_URL)
 
 // R O U T E S  S E T U P 
+app.get('/ping', (req, res) => res.send('pong'))
 app.use('/auth', authRouter)
 app.use('/user', authMiddleware ,userRouter)
 app.use('/post', authMiddleware ,postRouter)
