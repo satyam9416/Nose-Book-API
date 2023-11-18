@@ -33,6 +33,8 @@ app.use(cors({
     origin: process.env.CLIENT_URL
 }))
 
+console.log('client url : ', process.env.CLIENT_URL)
+
 // R O U T E S  S E T U P 
 app.use('/auth', authRouter)
 app.use('/user', authMiddleware ,userRouter)
