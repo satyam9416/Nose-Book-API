@@ -77,5 +77,5 @@ mongoose.connect(process.env.MONGO_CONNECT,
         useNewUrlParser: true,
         useUnifiedTopology: true
     }).then(() => {
-        server.listen(PORT, process.env.HOSTNAME, () => console.log(`Server started and listening at http://${process.env.HOSTNAME}:${PORT}`))
+        server.listen(PORT, () => console.log(`Server started and listening at http://${process.env.HOSTNAME}:${PORT}`))
     }).catch((err) => console.log(`Error : ${err}`))
